@@ -1,0 +1,16 @@
+{
+  "name": "testnode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethjs": "^0.3.1",
+    "ethjs-account": "^0.1.4",
+    "ethjs-provider-signer": "^0.1.4"
+  }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Web3js Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-header">Hello World!</h1>
+        <form id="trx-form" class="form">
+            <input type="text" class="form-control" name="to" placeholder="to address" required>
+            <input type="number" class="form-control" step="0.0001" name="value" placeholder="1.00" required>
+            <button id="btn-process" class="btn btn-success">Process</button>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.umd.min.js"></script>
+    <script>
+    $(window).on('load', function() {
+        if (typeof web3 == 'undefined') {
+            alert('Error: no web3 detected');
+        } else {
+            web3 = new Web3(web3.currentProvider);
+            console.log('web3 detected!');
+
+            // default values
+            $('input[name=to]').val('0x893BA6a4Edd7209d3CC865e1a74D3b54ec657046');
+            $('input[name=value]').val(0.01);
+        } 
+    });
+
+    $(document).ready(function() {
+        // bind click action
+        $('#btn-process').on('click', function () {
+            let data = {}
+            let form = $('#trx-form');
+            let btn = $(this);
+            form.serializeArray().forEach(function(obj, i) {
+                data[obj.name] = obj.value;
+            });
+            if (!data.to || !data.value) {
+                form.submit();
+                return false;
+            }
+            if (!web3) return false;
+
+            try {
+                btn.attr('disabled', true);
+                web3.eth.getAccounts(function (err, accounts) {
+                    if (err) if (err) throw err;
+                    data.from = accounts[0];
+                    data.value = web3.toWei(data.value);
+                    console.log(data);
+                    web3.eth.sendTransaction(data, function (err, hash) {
+                        if (err) throw err;
+                        alert('Success!');
+                        console.log('trx hash:' + hash);
+                    });
+                });
+            } catch (e) {
+                console.error(e);
+                btn.removeAttr('disabled');
+                return false;
+            }
+            return false;
+        });
+
+    });
+    </script>
+</body>
+</html>
